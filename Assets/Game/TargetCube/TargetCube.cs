@@ -3,10 +3,25 @@ using UnityEngine;
 
 public class TargetCube : MonoBehaviour
 {
+    [SerializeField]
+    private Material stateActive;
+
+    [SerializeField]
+    private Material stateInactive;
+
+
     public event Action<TargetCube> OnCubeHoverStart;
     public event Action<TargetCube> OnCubeHoverEnd;
 
+
+    private MeshRenderer MaterialRef { get; set; }
+
     #region Unity
+
+    private void Awake()
+    {
+        MaterialRef = GetComponent<MeshRenderer>();
+    }
 
     private void OnDestroy()
     {
@@ -24,6 +39,8 @@ public class TargetCube : MonoBehaviour
         {
             Debug.LogError(e, this);
         }
+
+        MaterialRef.material = stateActive;
     }
 
     private void OnMouseExit()
@@ -36,6 +53,8 @@ public class TargetCube : MonoBehaviour
         {
             Debug.LogError(e, this);
         }
+
+        MaterialRef.material = stateInactive;
     }
 
     #endregion

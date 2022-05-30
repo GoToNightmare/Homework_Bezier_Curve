@@ -10,18 +10,28 @@ public class GameLogic : MonoBehaviour
 
     private void InitInputEvents()
     {
-        gameInputHandler.OnResetKeyPressed += ResetProcess;
+        gameInputHandler.OnResetKeyDown += ResetProcess;
+        gameInputHandler.OnLeftClickDown += LeftClick;
     }
 
 
     private void DestroyInputEvents()
     {
-        gameInputHandler.OnResetKeyPressed -= ResetProcess;
+        gameInputHandler.OnResetKeyDown -= ResetProcess;
+        gameInputHandler.OnLeftClickDown -= LeftClick;
+    }
+
+    private void LeftClick()
+    {
+        if (CubeSelected)
+        {
+            movingCubeRef.LeftClick(LastSelectedCube);
+        }
     }
 
     private void ResetProcess()
     {
-        Debug.LogError("reset");
+        movingCubeRef.Reset();
     }
 
     #endregion
@@ -55,17 +65,23 @@ public class GameLogic : MonoBehaviour
 
     private void TargetCubeOnOnCubeHoverStart(TargetCube obj)
     {
-        Debug.LogError($"hover start {obj.name}");
         CubeSelected = true;
         LastSelectedCube = obj;
     }
 
     private void TargetCubeOnOnCubeHoverEnd(TargetCube obj)
     {
-        Debug.LogError($"hover end {obj.name}");
         CubeSelected = false;
         LastSelectedCube = null;
     }
+
+    #endregion
+
+
+    #region MovingCube
+
+    [SerializeField]
+    private MovingCube movingCubeRef;
 
     #endregion
 
@@ -85,19 +101,4 @@ public class GameLogic : MonoBehaviour
     }
 
     #endregion
-
-
-    /*
- * Задача: реализовать по клику на каждый из 6 кубов плавное перемещение по 
-кривой безье 7мого куба к выбранному (в процессе перемещения куб принимает rotation 
-цели),при нажатии кнопки пробел куб-7 возвращается на исходную позицию. 
-
-Использование встроенной функции lerp нежелательно.
-Для повышения ставки сразу предлагается усложнение.
-1е усложнение: куб-7 ищет пути к своим целям через соседей пример (куб-7 
-находится в исходной позиции по центру, целью выбран куб 1_1, куб 7 
-передвигается к нему через куб 1_2. То есть движение происходит к цели через 
-ближайший к нему куб.
-
- */
 }
